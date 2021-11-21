@@ -1,3 +1,12 @@
+# wasm-conway-client
+
+This repo is the js client to the packaged web assembly made in the repo [here](https://github.com/tjweldon/wasm-conway-tutorial)
+
+This is my progress so far with the tutorial according to the rust and web assembly book.
+I can't claim that the code in this repo is my own work because in the interests of not shooting myself in the foot, I've barely deviated from the instructions!
+
+The original README is retained below because it contains links to all the resources that I used!
+
 <div align="center">
 
   <h1><code>create-wasm-app</code></h1>
