@@ -6,8 +6,9 @@ const GRID_COLOR = "#CCCCCC";
 const DEAD_COLOR = "#FFFFFF";
 const ALIVE_COLOR = "#000000";
 
+
 // Construct the universe, and get its width and height.
-const universe = Universe.new_sized(256, 128);
+const universe = Universe.new_sized(100, 100);
 const width = universe.width();
 const height = universe.height();
 
@@ -59,8 +60,8 @@ const drawCells = () => {
                 : ALIVE_COLOR;
 
             ctx.fillRect(
-                col * (CELL_SIZE) + 1,
-                row * (CELL_SIZE) + 1,
+                col * (CELL_SIZE + 1) + 1,
+                row * (CELL_SIZE + 1) + 1,
                 CELL_SIZE,
                 CELL_SIZE
             );
@@ -70,22 +71,13 @@ const drawCells = () => {
     ctx.stroke();
 };
 
-function sleep(milliseconds) {
-    const date = Date.now();
-    let currentDate = null;
-    do {
-        currentDate = Date.now();
-    } while (currentDate - date < milliseconds);
-}
-
 const renderLoop = () => {
     universe.tick();
-    // drawGrid();
     drawCells();
     requestAnimationFrame(renderLoop);
 };
 
-// drawGrid();
+drawGrid();
 drawCells();
 requestAnimationFrame(renderLoop);
 
