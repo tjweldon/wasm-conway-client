@@ -20,6 +20,11 @@ canvas.width = (CELL_SIZE + 1) * width + 1;
 
 const ctx = canvas.getContext('2d');
 
+// ------------------------
+// Game Universe Rendering
+// ------------------------
+
+// Draws the grid of lines that bound each cell
 const drawGrid = () => {
     ctx.beginPath();
     ctx.strokeStyle = GRID_COLOR;
@@ -39,12 +44,16 @@ const drawGrid = () => {
     ctx.stroke();
 };
 
-
-
+// convenience function to convert from (row, column) index pair to the
+// index in the linear array of cells
 const getIndex = (row, column) => {
     return row * width + column;
 };
 
+
+// This function reads the universe state from the wasm module and fills
+// the cells that have the Alive state with black, and those with the
+// Dead state as white.
 const drawCells = () => {
     const cellsPtr = universe.cells();
     const cells = new Uint8Array(memory.buffer, cellsPtr, width * height);
@@ -71,6 +80,12 @@ const drawCells = () => {
     ctx.stroke();
 };
 
+
+// ------------------------
+// Interactivity functions
+// ------------------------
+
+// This event listener handles the toggling of cells in the game grid
 canvas.addEventListener("click", event => {
     const boundingRect = canvas.getBoundingClientRect();
 
@@ -89,22 +104,9 @@ canvas.addEventListener("click", event => {
     drawCells();
 });
 
-
 const isPaused = () => {
     return animationId === null;
 };
-
-let animationId = null;
-const renderLoop = () => {
-    drawGrid();
-    drawCells();
-
-    universe.tick();
-
-    animationId = requestAnimationFrame(renderLoop);
-};
-
-const playPauseButton = document.getElementById("play-pause");
 
 const play = () => {
     playPauseButton.textContent = "⏸";
@@ -119,6 +121,9 @@ const pause = () => {
     animationId = null;
 };
 
+// Binding the interactivity to the ui via the button
+const playPauseButton = document.getElementById("play-pause");
+
 playPauseButton.addEventListener("click", event => {
     if (isPaused()) {
         play();
@@ -127,4 +132,18 @@ playPauseButton.addEventListener("click", event => {
     }
 });
 
+// -----------------
+// Main render loop
+// -----------------
+
+let animationId = null;
+const renderLoop = () => {
+    drawGrid();
+    drawCells();
+
+    universe.tick();
+    animationId = requestAnimationFrame(renderLoop);
+};
+
+// Starts the main render loop
 play();
