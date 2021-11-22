@@ -9,7 +9,7 @@ const ALIVE_COLOR = "#000000";
 
 
 // Construct the universe, and get its width and height.
-const universe = Universe.new_sized(100, 64);
+const universe = Universe.new_sized(128, 128);
 const width = universe.width();
 const height = universe.height();
 
@@ -51,13 +51,13 @@ let s = (sk) => {
         sk.fill(colour)
         sk.noStroke();
         for (let row = 0; row < height; row++) {
+            let y = row * (CELL_SIZE + 1) + 1;
             for (let col = 0; col < width; col++) {
                 const idx = getIndex(row, col);
                 if (cells[idx] === exclude_value) {
                     continue;
                 }
                 let x = col * (CELL_SIZE + 1) + 1;
-                let y = row * (CELL_SIZE + 1) + 1;
                 sk.rect(x, y, CELL_SIZE, CELL_SIZE)
             }
         }
@@ -74,8 +74,11 @@ let s = (sk) => {
     sk.draw = () => {
         const cellsPtr = universe.cells();
         const cells = new Uint8Array(memory.buffer, cellsPtr, width * height);
+        sk.noStroke()
+        sk.fill(256)
+        sk.rect(0, 0, canvas_width, canvas_height)
+        sk.draw_grid()
         sk.fill_live_cells(cells)
-        sk.fill_dead_cells(cells)
         universe.tick()
     }
 }
